@@ -1,35 +1,22 @@
 import express, { Express } from "express";
-import { router } from "./routes/loginRoutes";
 import cookieSession from "cookie-session";
+import { AppRouter } from "./AppRouter";
 import "reflect-metadata";
+
+import "./controllers/LoginController";
+import "./controllers/rootController";
 
 const app: Express = express();
 const port = process.env.PORT || 7000;
 
+const appRouter = AppRouter.getInstance;
+
+app.set("view engine", "ejs");
+
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(cookieSession({ keys: ["laskdjf"] }));
-app.use(router);
-
-app.get("/", (req, res) => {
-  const html = `
-  <h1>Home page<h1>
-  <p>
-  ${
-    req.session && req.session.loggedIn
-      ? "You are logged in"
-      : "You are NOT logged in"
-  }
-  </p>
-  <a href='/protected'>Protected</a>
-  ${
-    req.session && req.session.loggedIn
-      ? "<a href='/logout'>Logout</a>"
-      : "<a href='/login'>Login</a>"
-  }
-   `;
-  res.send(html);
-});
+app.use(cookieSession({ keys: ["cookiesession"] }));
+app.use(appRouter);
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
