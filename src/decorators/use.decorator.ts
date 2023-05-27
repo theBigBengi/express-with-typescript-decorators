@@ -1,6 +1,5 @@
 import { MetadataKeys } from "./MetadataKeys";
 import { RequestHandler } from "express";
-import { LoginController } from "../controllers/LoginController";
 
 export function use(middleware: RequestHandler) {
   return function (value: Function, context: ClassMethodDecoratorContext) {
